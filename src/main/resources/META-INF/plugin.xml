@@ -1,0 +1,37 @@
+<idea-plugin>
+    <name>yobatis</name>
+    <version>0.0.1</version>
+    <vendor email="linbaiye@gmail.com" url="https://github.com/linbaiye">Kyle Lin</vendor>
+
+    <description><![CDATA[
+    Yobatis is a plugin based on mybatis-generator that helps generate DAO layer according
+    to specific tables.
+    ]]></description>
+
+    <change-notes><![CDATA[
+      Release 0.0.1: Initial release.<br>
+    ]]>
+    </change-notes>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
+    <idea-version since-build="162"/>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+    </extensions>
+
+
+    <actions>
+        <group id="Yobatis.MenuAnchors" text="Yobatis Dao" description="Yobatis Dao plugin">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+            <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
+            <action id="entry" class="org.nalby.yobatis.idea.YobatisAction"/>
+        </group>
+    </actions>
+
+</idea-plugin>

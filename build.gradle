@@ -1,0 +1,39 @@
+plugins {
+    id "org.jetbrains.intellij" version "0.3.1"
+}
+
+apply plugin: 'idea'
+apply plugin: 'org.jetbrains.intellij'
+apply plugin: 'java'
+
+
+runIde {
+    jvmArgs '-Djdk.util.zip.ensureTrailingSlash=false'
+}
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+
+dependencies {
+    compile files('libs/yobatis-0.2.4-SNAPSHOT.jar', 'libs/mybatis-generator-core-1.3.6-SNAPSHOT.jar')
+    compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.25'
+    compile group: 'org.dom4j', name: 'dom4j', version: '2.0.1'
+    testCompile 'junit:junit:4.12'
+}
+
+
+intellij {
+    version '143.2370.31'
+    pluginName 'yobatis'
+    //intellij.updateSinceUntilBuild false
+}
+
+group 'org.nalby.yobatis'
+version '1.0'
+
+repositories {
+    mavenCentral()
+}
+
+
