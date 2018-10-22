@@ -23,8 +23,11 @@ public final class YobatisPsiUtil {
 
     @Nullable
     private static String findMapperNamespace(PsiJavaFile psiJavaFile) {
+        if (psiJavaFile == null) {
+            return null;
+        }
         VirtualFile virtualFile = psiJavaFile.getVirtualFile();
-        if (!virtualFile.getName().endsWith("Dao.java")) {
+        if (virtualFile == null || !virtualFile.getName().endsWith("Dao.java")) {
             return null;
         }
         return NamingHelper.glueMapperNamespace(psiJavaFile.getPackageName(), virtualFile.getName());

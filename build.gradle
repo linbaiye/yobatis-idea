@@ -32,7 +32,7 @@ intellij {
 }
 
 group 'org.nalby.yobatis'
-version '1.4'
+version '1.4.5'
 
 repositories {
     mavenCentral()
