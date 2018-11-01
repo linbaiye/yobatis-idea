@@ -1,5 +1,4 @@
 <idea-plugin>
-    <id>org.nalby</id>
     <name>yobatis</name>
     <version>0.0.1</version>
     <vendor email="linbaiye@gmail.com" url="https://github.com/linbaiye">Kyle Lin</vendor>
@@ -30,10 +29,10 @@
     </extensions>
 
     <actions>
-        <group id="Yobatis.MenuAnchors" text="Yobatis Dao" description="Yobatis Dao plugin">
+        <group id="Yobatis.MenuAnchors" text="Yobatis" description="Yobatis plugin">
             <add-to-group group-id="EditorPopupMenu" anchor="first"/>
             <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
-            <action id="entry" class="org.nalby.yobatis.idea.YobatisAction"/>
+            <action id="entry" icon="/icons/icon1.png" class="org.nalby.yobatis.idea.YobatisAction"/>
         </group>
     </actions>
 </idea-plugin>
