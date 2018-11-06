@@ -1,14 +1,12 @@
 package org.nalby.yobatis.idea;
 
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.nalby.yobatis.core.exception.ResourceNotAvailableExeception;
 import org.nalby.yobatis.core.structure.File;
 import org.nalby.yobatis.core.structure.Folder;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 public class IdeaFile implements File {
 
@@ -31,11 +29,15 @@ public class IdeaFile implements File {
         return virtualFile.getPath();
     }
 
-    private void doWrite(byte[] bytes) throws IOException {
-        try (FileOutputStream fileOutputStream = new FileOutputStream(path())) {
-            fileOutputStream.write(bytes);
-        }
-        virtualFile.refresh(false, false);
+    private void doWrite(byte[] bytes) {
+        ApplicationManager.getApplication().runWriteAction(() -> {
+            try (FileOutputStream fileOutputStream = new FileOutputStream(path())) {
+                fileOutputStream.write(bytes);
+                virtualFile.refresh(false, false);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override
@@ -49,7 +51,7 @@ public class IdeaFile implements File {
 
     @Override
     public void write(InputStream inputStream) {
-        try (ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream buffer = new ByteArrayOutputStream(10000)) {
             int nRead;
             byte[] data = new byte[1024];
             while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
@@ -65,11 +67,7 @@ public class IdeaFile implements File {
 
     @Override
     public void write(String s) {
-        try {
-            doWrite(s.getBytes());
-        } catch (IOException e) {
-            throw new ResourceNotAvailableExeception(e);
-        }
+        doWrite(s.getBytes());
     }
 
     @Override

@@ -9,7 +9,6 @@ import com.intellij.psi.PsiMethod;
 import com.intellij.psi.xml.XmlAttribute;
 import com.intellij.psi.xml.XmlFile;
 import org.jetbrains.annotations.NotNull;
-import org.nalby.yobatis.core.mybatis.mapper.MapperReservedIdentifierx;
 
 import java.util.Collection;
 
@@ -22,7 +21,8 @@ public class XmlToJavaLineMarkerProvider extends RelatedItemLineMarkerProvider {
             return;
         }
         String id = xmlAttribute.getValue();
-        if (MapperReservedIdentifierx.contains(id)) {
+        if (id != null) {
+//        if (MapperReservedIdentifierx.contains(id)) {
             return;
         }
         PsiElement element = xmlAttribute;
