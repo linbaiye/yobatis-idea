@@ -5,6 +5,7 @@ import com.intellij.execution.ui.ConsoleView;
 import com.intellij.execution.ui.ConsoleViewContentType;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.openapi.wm.ToolWindowAnchor;
 import com.intellij.openapi.wm.ToolWindowManager;
 import com.intellij.ui.content.Content;
 
@@ -30,15 +31,15 @@ public class LoggingConsoleManager {
     }
 
     public void appendError(String msg) {
-        consoleView.print(msg, ConsoleViewContentType.LOG_ERROR_OUTPUT);
+        consoleView.print(msg, ConsoleViewContentType.ERROR_OUTPUT);
     }
 
     public void appendDebug(String msg) {
-        consoleView.print(msg, ConsoleViewContentType.LOG_DEBUG_OUTPUT);
+        consoleView.print(msg, ConsoleViewContentType.NORMAL_OUTPUT);
     }
 
     public void appendInfo(String msg) {
-        consoleView.print(msg, ConsoleViewContentType.LOG_INFO_OUTPUT);
+        consoleView.print(msg, ConsoleViewContentType.NORMAL_OUTPUT);
     }
 
     public synchronized static LoggingConsoleManager getInstance() {
@@ -48,13 +49,16 @@ public class LoggingConsoleManager {
         return instance;
     }
 
-    public synchronized static void init(Project project) {
-        ToolWindow outputWindow = ToolWindowManager.getInstance(project).getToolWindow("Yobatis Output");
+    public synchronized static LoggingConsoleManager init(Project project) {
+        ToolWindow outputWindow = ToolWindowManager.getInstance(project).registerToolWindow("Yobatis Output",
+                true, ToolWindowAnchor.BOTTOM);
+
         ConsoleView consoleView = TextConsoleBuilderFactory.getInstance().createBuilder(project).getConsole();
+
         Content content = outputWindow.getContentManager().getFactory().createContent(consoleView.getComponent(),
-                "Yobatis", false);
+                "", false);
         outputWindow.getContentManager().addContent(content);
         instance = new LoggingConsoleManager(consoleView, content, outputWindow);
+        return instance;
     }
-
 }

@@ -6,8 +6,10 @@ import com.intellij.openapi.wm.ToolWindowFactory;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentFactory;
 import org.jetbrains.annotations.NotNull;
+import org.nalby.yobatis.core.log.LoggerFactory;
 import org.nalby.yobatis.core.mybatis.Settings;
 import org.nalby.yobatis.core.mybatis.TableElement;
+import org.nalby.yobatis.idea.logging.IdeaLogger;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
@@ -57,6 +59,9 @@ public class YobatisToolWindow implements ToolWindowFactory {
             @Override
             public void mouseClicked(MouseEvent event) {
                 JList<CheckboxListItem> list = (JList<CheckboxListItem>) event.getSource();
+                if (list == null || list.getModel() == null || list.getModel().getSize() == 0) {
+                    return;
+                }
                 int index = list.locationToIndex(event.getPoint());
                 CheckboxListItem item = list.getModel().getElementAt(index);
                 item.setSelected(!item.isSelected());
@@ -97,31 +102,31 @@ public class YobatisToolWindow implements ToolWindowFactory {
     }
 
     private void updateSettingsView(Settings settings) {
-        password.setText(settings.getPassword());
-        username.setText(settings.getUser());
-        url.setText(settings.getUrl());
-        daoPackage.setText(settings.getDaoPackage());
-        daoPath.setText(settings.getDaoPath());
-        entityPath.setText(settings.getEntityPath());
-        entityPackage.setText(settings.getEntityPackage());
-        xmlMapperPath.setText(settings.getXmlPath());
+        if (settings != null) {
+            password.setText(settings.getPassword());
+            username.setText(settings.getUser());
+            url.setText(settings.getUrl());
+            daoPackage.setText(settings.getDaoPackage());
+            daoPath.setText(settings.getDaoPath());
+            entityPath.setText(settings.getEntityPath());
+            entityPackage.setText(settings.getEntityPackage());
+            xmlMapperPath.setText(settings.getXmlPath());
+        }
     }
 
     private void updateTablesView(List<TableElement> tableElementList) {
-        if (tableElementList.isEmpty()) {
-            return;
+        if (tableElementList != null) {
+            ListModel<CheckboxListItem>  jbCheckBoxListModel = new DefaultListModel<>();
+            for (TableElement tableElement : tableElementList) {
+                CheckboxListItem jbCheckBox  = CheckboxListItem.fromTableElement(tableElement);
+                ((DefaultListModel<CheckboxListItem>) jbCheckBoxListModel).addElement(jbCheckBox);
+            }
+            tableList.setModel(jbCheckBoxListModel);
         }
-        ListModel<CheckboxListItem>  jbCheckBoxListModel = new DefaultListModel<>();
-        for (TableElement tableElement : tableElementList) {
-            CheckboxListItem jbCheckBox  = CheckboxListItem.fromTableElement(tableElement);
-            ((DefaultListModel<CheckboxListItem>) jbCheckBoxListModel).addElement(jbCheckBox);
-        }
-        tableList.setModel(jbCheckBoxListModel);
     }
 
 
     private LoadSettingsCommand makeLoadSettingsCommand() {
-
         return new LoadSettingsCommand();
     }
 
@@ -189,6 +194,7 @@ public class YobatisToolWindow implements ToolWindowFactory {
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(body, "", false);
         toolWindow.getContentManager().addContent(content);
+        LoggerFactory.setLogger(IdeaLogger.class);
         executor = LoggingAwareCommandExecutor.newInstance(project);
         executeLoadAll();
     }

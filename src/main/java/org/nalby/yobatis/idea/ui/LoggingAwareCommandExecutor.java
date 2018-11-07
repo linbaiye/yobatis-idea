@@ -27,6 +27,7 @@ public class LoggingAwareCommandExecutor {
         try {
             LoggingConsoleManager.getInstance().activateLoggingConsole();
             if (command instanceof GenerateCommand) {
+                LOGGER.info("Generating files..");
                 yobatisShell.save(((GenerateCommand) command).getSettings());
                 yobatisShell.generate(((GenerateCommand) command).getTableElementList());
             } else if (command instanceof LoadSettingsCommand) {

@@ -25,20 +25,16 @@ dependencies {
 
 
 intellij {
+    version '144.3600.7'
     //version '171.4694.73'
-    version 'IC-182.4892.20'
+//    version 'IC-182.4892.20'
     pluginName 'yobatis'
     updateSinceUntilBuild false
 }
 
-//IntelliJ IDEA 2018.2.5 (Community Edition)
-//Build #IC-182.4892.20, built on October 16, 2018
-//JRE: 1.8.0_152-release-1248-b19 x86_64
-//JVM: OpenJDK 64-Bit Server VM by JetBrains s.r.o
-//macOS 10.13
 
 group 'org.nalby'
-version '1.4.5'
+version '2.0.8'
 
 repositories {
     mavenCentral()
