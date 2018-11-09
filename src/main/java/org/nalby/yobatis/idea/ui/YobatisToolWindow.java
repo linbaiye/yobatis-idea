@@ -10,6 +10,7 @@ import org.nalby.yobatis.core.log.LoggerFactory;
 import org.nalby.yobatis.core.mybatis.Settings;
 import org.nalby.yobatis.core.mybatis.TableElement;
 import org.nalby.yobatis.idea.logging.IdeaLogger;
+import org.nalby.yobatis.idea.logging.LoggingConsoleManager;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
@@ -191,10 +192,13 @@ public class YobatisToolWindow implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
+        // Must initialize logger at very first.
+        LoggerFactory.setLogger(IdeaLogger.class);
+        LoggingConsoleManager.init(project);
+
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(body, "", false);
         toolWindow.getContentManager().addContent(content);
-        LoggerFactory.setLogger(IdeaLogger.class);
         executor = LoggingAwareCommandExecutor.newInstance(project);
         executeLoadAll();
     }

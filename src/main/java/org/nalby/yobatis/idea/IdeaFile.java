@@ -6,7 +6,10 @@ import org.nalby.yobatis.core.exception.ResourceNotAvailableExeception;
 import org.nalby.yobatis.core.structure.File;
 import org.nalby.yobatis.core.structure.Folder;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class IdeaFile implements File {
 

@@ -55,7 +55,6 @@ public class LoggingAwareCommandExecutor {
     public synchronized static LoggingAwareCommandExecutor newInstance(com.intellij.openapi.project.Project project) {
         IdeaProject ideaProject = IdeaProject.wrap(project);
         YobatisShell shell = YobatisShell.newInstance(ideaProject);
-        LoggingConsoleManager.init(project);
         return new LoggingAwareCommandExecutor(shell);
     }
 }
