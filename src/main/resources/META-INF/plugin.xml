@@ -1,22 +1,24 @@
 <idea-plugin>
-    <id>org.nalby</id>
     <name>yobatis</name>
     <version>0.0.1</version>
     <vendor email="linbaiye@gmail.com" url="https://github.com/linbaiye">Kyle Lin</vendor>
 
     <description><![CDATA[
-    Yobatis is a plugin based on mybatis-generator that generates DAO layer according
-    to specific tables.
+    Yobatis is a plugin based on mybatis-generator that generates DAO/Entity classes, making it
+    much easier to deal with mysql tables.
     ]]></description>
 
     <change-notes><![CDATA[
       Release 1.4: Support navigation between dao interface and xml mapper.<br>
+      Release 2.0.*: Employee Tool Window to simplify usage.<br>
     ]]>
     </change-notes>
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/build_number_ranges.html for description -->
     <!--<idea-version since-build="162"/>-->
     <idea-version since-build="140.2110.5"/>
+
+
 
     <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
          on how to target different products -->
@@ -27,13 +29,8 @@
     <extensions defaultExtensionNs="com.intellij">
         <codeInsight.lineMarkerProvider language="JAVA" implementationClass="org.nalby.yobatis.idea.navigation.JavaToXmlLineMarkerProvider"/>
         <codeInsight.lineMarkerProvider language="XML" implementationClass="org.nalby.yobatis.idea.navigation.XmlToJavaLineMarkerProvider"/>
+        <toolWindow id="Yobatis" anchor="right" secondary="false" icon="/icons/icon1.png"
+                    factoryClass="org.nalby.yobatis.idea.ui.YobatisToolWindow"/>
     </extensions>
 
-    <actions>
-        <group id="Yobatis.MenuAnchors" text="Yobatis Dao" description="Yobatis Dao plugin">
-            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
-            <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
-            <action id="entry" class="org.nalby.yobatis.idea.YobatisAction"/>
-        </group>
-    </actions>
 </idea-plugin>
