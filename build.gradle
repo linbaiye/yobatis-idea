@@ -16,9 +16,9 @@ targetCompatibility = JavaVersion.VERSION_1_8
 
 
 dependencies {
-    //compile files('libs/mybatis-generator-core-1.3.6-SNAPSHOT.jar')
     compile files('libs/yobatis-core.jar', 'libs/mybatis-generator-core-1.3.6-SNAPSHOT.jar')
     compile group: 'mysql', name: 'mysql-connector-java', version: '5.1.25'
+    compile group: 'jaxen', name: 'jaxen', version: '1.1.6'
     compile group: 'org.dom4j', name: 'dom4j', version: '2.1.1'
     testCompile 'junit:junit:4.12'
 }
@@ -26,14 +26,13 @@ dependencies {
 
 intellij {
     version '144.3600.7'
-    //version '171.4694.73'
-    //version 'IC-182.4892.20'
+//    version 'IC-182.4892.20'
     pluginName 'yobatis'
     updateSinceUntilBuild false
 }
 
 group 'org.nalby'
-version '2.1.0'
+version '2.1.1'
 
 repositories {
     mavenCentral()

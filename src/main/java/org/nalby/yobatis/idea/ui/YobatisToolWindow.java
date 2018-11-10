@@ -35,16 +35,14 @@ public class YobatisToolWindow implements ToolWindowFactory {
     private JButton configButton;
     private JButton generateButton;
     private JList tableList;
-    private JPanel databaseSettings;
-    private JPanel yobatisSettings;
-    private JScrollPane scrollPanel;
-    private JPanel menu;
     private JButton refreshButton;
     private JTextField mapperPackage;
 
     private boolean configureEnabled;
 
     private LoggingAwareCommandExecutor executor;
+
+    private ToolWindow yobatisToolWindow;
 
     public YobatisToolWindow() {
         configureEnabled = true;
@@ -198,9 +196,10 @@ public class YobatisToolWindow implements ToolWindowFactory {
         LoggerFactory.setLogger(IdeaLogger.class);
         LoggingConsoleManager.init(project);
 
+        yobatisToolWindow = toolWindow;
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(body, "", false);
-        toolWindow.getContentManager().addContent(content);
+        yobatisToolWindow.getContentManager().addContent(content);
         executor = LoggingAwareCommandExecutor.newInstance(project);
         executeLoadAll();
     }

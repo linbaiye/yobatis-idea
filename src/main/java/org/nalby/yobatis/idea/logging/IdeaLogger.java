@@ -20,7 +20,9 @@ public class IdeaLogger extends AbstractLogger {
 
     @Override
     public void debug(String format, Object... args) {
-        LoggingConsoleManager.getInstance().appendDebug(format("DEBUG", format, args));
+        if (defaultLevel == LogLevel.DEBUG) {
+            LoggingConsoleManager.getInstance().appendDebug(format("DEBUG", format, args));
+        }
     }
 
     @Override
