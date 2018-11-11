@@ -1,17 +1,8 @@
 package org.nalby.yobatis.idea.ui;
 
-import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowFactory;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentFactory;
-import org.jetbrains.annotations.NotNull;
-import org.nalby.yobatis.core.log.AbstractLogger;
-import org.nalby.yobatis.core.log.LoggerFactory;
 import org.nalby.yobatis.core.mybatis.Settings;
 import org.nalby.yobatis.core.mybatis.TableElement;
-import org.nalby.yobatis.idea.logging.IdeaLogger;
-import org.nalby.yobatis.idea.logging.LoggingConsoleManager;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
@@ -20,10 +11,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-
-public class YobatisToolWindow implements ToolWindowFactory {
-    private JPanel body;
-    private JPanel configurationBox;
+public class YobatisToolWindow {
     private JTextField url;
     private JTextField username;
     private JTextField password;
@@ -36,19 +24,22 @@ public class YobatisToolWindow implements ToolWindowFactory {
     private JButton generateButton;
     private JList tableList;
     private JButton refreshButton;
+    private JPanel body;
+    private JPanel configurationBox;
     private JTextField mapperPackage;
 
     private boolean configureEnabled;
-
     private LoggingAwareCommandExecutor executor;
 
     private ToolWindow yobatisToolWindow;
 
-    public YobatisToolWindow() {
+    public YobatisToolWindow(ToolWindow toolWindow, LoggingAwareCommandExecutor executor) {
         configureEnabled = true;
         bindListeners();
         initJList();
         toggleSettingsView();
+        yobatisToolWindow = toolWindow;
+        this.executor = executor;
     }
 
     private void initJList() {
@@ -125,7 +116,6 @@ public class YobatisToolWindow implements ToolWindowFactory {
         }
     }
 
-
     private LoadSettingsCommand makeLoadSettingsCommand() {
         return new LoadSettingsCommand();
     }
@@ -156,7 +146,7 @@ public class YobatisToolWindow implements ToolWindowFactory {
         updateTablesView(command.getResult());
     }
 
-    private void executeLoadAll() {
+    public void executeLoadAll() {
         LoadSettingsCommand command = makeLoadSettingsCommand();
         executor.execute(command);
         updateSettingsView(command.getResult());
@@ -189,19 +179,7 @@ public class YobatisToolWindow implements ToolWindowFactory {
         });
     }
 
-    @Override
-    public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
-        // Must initialize logger at very first.
-        IdeaLogger.defaultLevel = IdeaLogger.LogLevel.INFO;
-        LoggerFactory.setLogger(IdeaLogger.class);
-        LoggingConsoleManager.init(project);
-
-        yobatisToolWindow = toolWindow;
-        ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-        Content content = contentFactory.createContent(body, "", false);
-        yobatisToolWindow.getContentManager().addContent(content);
-        executor = LoggingAwareCommandExecutor.newInstance(project);
-        executeLoadAll();
+    public JPanel getContent() {
+        return body;
     }
-
 }

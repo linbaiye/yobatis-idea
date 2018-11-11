@@ -1,10 +1,12 @@
 package org.nalby.yobatis.idea.ui;
 
+import com.intellij.openapi.project.Project;
 import org.nalby.yobatis.core.YobatisShell;
 import org.nalby.yobatis.core.log.Logger;
 import org.nalby.yobatis.core.log.LoggerFactory;
 import org.nalby.yobatis.core.mybatis.Settings;
 import org.nalby.yobatis.idea.IdeaProject;
+import org.nalby.yobatis.idea.logging.IdeaLogger;
 import org.nalby.yobatis.idea.logging.LoggingConsoleManager;
 
 import java.util.Collections;
@@ -18,14 +20,17 @@ public class LoggingAwareCommandExecutor {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(LoggingAwareCommandExecutor.class);
 
-    private LoggingAwareCommandExecutor(YobatisShell shell) {
+    private Project project;
+
+    private LoggingAwareCommandExecutor(YobatisShell shell, Project project) {
         this.yobatisShell = shell;
+        this.project = project;
     }
 
     @SuppressWarnings("unchecked")
     public void execute(Command command) {
         try {
-            LoggingConsoleManager.getInstance().activateLoggingConsole();
+            LoggingConsoleManager.getInstance().activateLoggingConsole(project);
             if (command instanceof GenerateCommand) {
                 LOGGER.info("Generating files..");
                 yobatisShell.save(((GenerateCommand) command).getSettings());
@@ -53,8 +58,13 @@ public class LoggingAwareCommandExecutor {
     }
 
     public synchronized static LoggingAwareCommandExecutor newInstance(com.intellij.openapi.project.Project project) {
+        // Must initialize logger at very first.
+        IdeaLogger.defaultLevel = IdeaLogger.LogLevel.INFO;
+        LoggerFactory.setLogger(IdeaLogger.class);
+        LoggingConsoleManager.newInstance(project);
+
         IdeaProject ideaProject = IdeaProject.wrap(project);
         YobatisShell shell = YobatisShell.newInstance(ideaProject);
-        return new LoggingAwareCommandExecutor(shell);
+        return new LoggingAwareCommandExecutor(shell, project);
     }
 }
