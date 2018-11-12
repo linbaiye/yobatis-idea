@@ -16,28 +16,19 @@ public class LoggingConsoleManager {
 
     private ConsoleView consoleView;
 
-    private ToolWindow toolWindow;
-
-    private Content content;
-
-    private final static Key<ConsoleView> CONSOLE_KEY = new Key<>("consoleView");
-    private final static Key<ToolWindow> WINDOW_KEY = new Key<>("toolWindow");
-    private final static Key<Content> CONTENT_KEY = new Key<>("content");
-
-    public LoggingConsoleManager(ConsoleView consoleView, ToolWindow toolWindow, Content content) {
-        this.consoleView = consoleView;
-        this.toolWindow = toolWindow;
-        this.content = content;
-    }
 
     public void activateLoggingConsole(Project project) {
-        toolWindow = project.getUserData(WINDOW_KEY);
-        content = project.getUserData(CONTENT_KEY);
-        consoleView = project.getUserData(CONSOLE_KEY);
-        if (toolWindow != null && content != null) {
-            toolWindow.activate(() -> { }, true, true);
-            toolWindow.getContentManager().setSelectedContent(content);
+        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Yobatis Output");
+        if (toolWindow == null) {
+            return;
         }
+        Content content = toolWindow.getContentManager().getContent(0);
+        if (content == null) {
+            return;
+        }
+        consoleView = (ConsoleView) content.getComponent();
+        toolWindow.activate(()->{}, true, true);
+        toolWindow.getContentManager().setSelectedContent(content);
     }
 
     public void appendError(String msg) {
@@ -58,14 +49,12 @@ public class LoggingConsoleManager {
         }
     }
 
-
     public synchronized static LoggingConsoleManager getInstance() {
         if (instance == null) {
             throw new IllegalStateException("Not initialized.");
         }
         return instance;
     }
-
 
     public synchronized static LoggingConsoleManager newInstance(Project project) {
 
@@ -77,10 +66,7 @@ public class LoggingConsoleManager {
         Content content = outputWindow.getContentManager().getFactory().createContent(consoleView.getComponent(),
                 "", false);
         outputWindow.getContentManager().addContent(content);
-        project.putUserData(WINDOW_KEY, outputWindow);
-        project.putUserData(CONSOLE_KEY, consoleView);
-        project.putUserData(CONTENT_KEY, content);
-        instance = new LoggingConsoleManager(consoleView, outputWindow, content);
+        instance = new LoggingConsoleManager();
         return instance;
     }
 }

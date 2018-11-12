@@ -58,11 +58,7 @@ public class LoggingAwareCommandExecutor {
     }
 
     public synchronized static LoggingAwareCommandExecutor newInstance(com.intellij.openapi.project.Project project) {
-        // Must initialize logger at very first.
-        IdeaLogger.defaultLevel = IdeaLogger.LogLevel.INFO;
-        LoggerFactory.setLogger(IdeaLogger.class);
         LoggingConsoleManager.newInstance(project);
-
         IdeaProject ideaProject = IdeaProject.wrap(project);
         YobatisShell shell = YobatisShell.newInstance(ideaProject);
         return new LoggingAwareCommandExecutor(shell, project);

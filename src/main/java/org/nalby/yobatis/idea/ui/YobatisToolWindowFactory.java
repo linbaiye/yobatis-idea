@@ -16,12 +16,16 @@ public class YobatisToolWindowFactory implements ToolWindowFactory {
 
     @Override
     public void createToolWindowContent(@NotNull Project project, @NotNull ToolWindow toolWindow) {
+        // Must initialize logger at very first.
+        LoggerFactory.setLogger(IdeaLogger.class);
+        IdeaLogger.defaultLevel = IdeaLogger.LogLevel.INFO;
 
         LoggingAwareCommandExecutor executor = LoggingAwareCommandExecutor.newInstance(project);
         YobatisToolWindow yobatisToolWindow = new YobatisToolWindow(toolWindow, executor);
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(yobatisToolWindow.getContent(), "", false);
         toolWindow.getContentManager().addContent(content);
+
         yobatisToolWindow.executeLoadAll();
     }
 }
